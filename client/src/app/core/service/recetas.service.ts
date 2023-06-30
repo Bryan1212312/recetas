@@ -39,6 +39,13 @@ export class RecetasService {
     });
   }
 
+  postRecetas(file: any){
+    console.log('Datos enviados', file);
+    return this.http.post<any>(this.URL_datosRecetas + file, {
+      withCredentials: true,
+    })
+  }
+
   getRecetaId(id: number) {
     return this.http.get<any>(`${this.URL_datosRecetas}/${id}`, {
       withCredentials: true,
