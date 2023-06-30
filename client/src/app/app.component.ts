@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Router, RoutesRecognized } from '@angular/router';
 import { SesionService } from './core/service/sesion.service';
+import { RecetasService } from './core/service/recetas.service';
 
 
 @Component({
@@ -16,11 +17,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   mostarAciones!: boolean;
 
+  file!: any
+
   private elDestructor$ = new Subject<any>();
 
   showLoading: boolean = true;
 
-  constructor(public srvSesion: SesionService) {}
+  constructor(public srvSesion: SesionService,
+      public srvRecetas: RecetasService
+    ) {}
 
   ngOnInit(): void {
     this.srvSesion.selectSesion$.pipe(takeUntil(this.elDestructor$)).subscribe({
@@ -33,6 +38,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleModal() {
     this.showModal = !this.showModal;
+  }
+
+  agregar(){
+    this.srvRecetas.postRecetas(this.file)
+    .pipe(takeUntil(this.elDestructor$))
+    .subscribe({
+      next:(datos:any) =>{
+        console.log('Lo que envia el backend');
+      },
+      error: (err) =>{
+        console.log(err);
+      }
+    })
   }
 
   cerrarSesion() {
